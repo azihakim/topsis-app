@@ -55,17 +55,7 @@
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
 
-                        <x-dropdown-link class="nav-link" :href="route('logout')"
-                            onclick="event.preventDefault();
-                                    this.closest('form').submit();">
-                            <button type="button" class="btn btn-block btn-outline-danger">Log Out</button>
-                        </x-dropdown-link>
-                    </form>
-                </li>
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -103,6 +93,19 @@
                                 <p>Sub Kriteria</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="route('logout')" class="nav-link"
+                                    onclick="event.preventDefault();
+                                                            this.closest('form').submit();">
+                                    <i class="nav-icon fas fa-times text-danger"></i>
+                                    <p>Keluar</p>
+                                </a>
+                            </form>
+                        </li>
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -335,7 +338,7 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
             $('#example2').DataTable({
                 "paging": true,
