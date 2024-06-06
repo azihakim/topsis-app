@@ -24,9 +24,9 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label>Jabatan</label>
-                                    <input value="{{ $karyawan->jabatan }}" name="jabatan" type="text"
-                                        class="form-control" placeholder="Masukkan Jabatan karyawan">
+                                    <label>Divisi</label>
+                                    <input value="{{ $karyawan->divisi }}" name="divisi" type="text"
+                                        class="form-control" placeholder="Masukkan Divisi karyawan">
                                 </div>
 
                             </div>

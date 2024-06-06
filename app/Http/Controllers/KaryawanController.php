@@ -34,7 +34,7 @@ class KaryawanController extends Controller
     {
         $karyawan = new Karyawan;
         $karyawan->nama = $request->nama;
-        $karyawan->jabatan = $request->jabatan;
+        $karyawan->divisi = $request->divisi;
         $karyawan->save();
 
         return redirect()->route('karyawan.index')
@@ -57,7 +57,7 @@ class KaryawanController extends Controller
     {
         $karyawan = Karyawan::findOrFail($id);
         $karyawan->nama = $request->nama;
-        $karyawan->jabatan = $request->jabatan;
+        $karyawan->divisi = $request->divisi;
         $karyawan->save();
 
         return redirect()->route('karyawan.index');

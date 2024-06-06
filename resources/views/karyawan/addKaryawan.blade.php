@@ -22,9 +22,9 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label>Jabatan</label>
-                                    <input name="jabatan" type="text" class="form-control"
-                                        placeholder="Masukkan Jabatan Karyawan">
+                                    <label>Divisi</label>
+                                    <input name="divisi" type="text" class="form-control"
+                                        placeholder="Masukkan Divisi Karyawan">
                                 </div>
                             </div>
                         </div>

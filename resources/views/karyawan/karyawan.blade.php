@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>Nama</th>
-                        <th>Jabatan</th>
+                        <th>Divisi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -30,7 +30,7 @@
                     @foreach ($data as $item)
                         <tr>
                             <td>{{ $item->nama }}</td>
-                            <td>{{ $item->jabatan }}</td>
+                            <td>{{ $item->divisi }}</td>
                             <td>
                                 <div class="row">
                                     <div class= "col-6">
@@ -53,7 +53,7 @@
                 <tfoot>
                     <tr>
                         <th>Nama</th>
-                        <th>Jabatan</th>
+                        <th>Divisi</th>
                         <th>Aksi</th>
                     </tr>
                 </tfoot>
