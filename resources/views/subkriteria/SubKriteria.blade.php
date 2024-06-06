@@ -3,8 +3,8 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Data Kriteria</h3>
-            <a href="{{ url('karyawan/create') }}" class="btn btn-primary float-right">Tambah Kriteria</a>
+            <h3 class="card-title">Data Sub Kriteria</h3>
+            <a href="{{ url('subkriteria/create') }}" class="btn btn-primary float-right">Tambah Sub Kriteria</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -21,25 +21,27 @@
             <table id="example1" class="table-bordered table-striped table">
                 <thead>
                     <tr>
-                        <th>Nama</th>
-                        <th>Jabatan</th>
+                        <th>Kriteria</th>
+                        <th>Sub Kriteria</th>
+                        <th>Bobot</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data as $item)
                         <tr>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ $item->jabatan }}</td>
+                            <td>{{ $item->kriteria->nama_kriteria }}</td>
+                            <td>{{ $item->nama_sub_kriteria }}</td>
+                            <td>{{ $item->bobot }}</td>
                             <td>
                                 <div class="row">
                                     <div class= "col-6">
                                         <a class="btn btn-block btn-outline-warning"
-                                            href="{{ url('karyawan/' . $item->id . '/edit') }}">Edit</a>
+                                            href="{{ url('subkriteria/' . $item->id . '/edit') }}">Edit</a>
                                     </div>
                                     <div class= "col-6">
                                         <form id="deleteForm{{ $item->id }}"
-                                            action="{{ url('karyawan/' . $item->id) }} " method="POST">
+                                            action="{{ url('subkriteria/' . $item->id) }} " method="POST">
                                             @csrf
                                             <input type="hidden" name="_method" value="DELETE">
                                             <button class="btn btn-block btn-outline-danger delete-btn">Hapus</button>
@@ -52,8 +54,9 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Nama</th>
-                        <th>Jabatan</th>
+                        <th>Kriteria</th>
+                        <th>Sub Kriteria</th>
+                        <th>Bobot</th>
                         <th>Aksi</th>
                     </tr>
                 </tfoot>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kriteria;
+use App\Models\SubKriteria;
 use Illuminate\Http\Request;
 
 class SubKriteriaController extends Controller
@@ -11,7 +13,8 @@ class SubKriteriaController extends Controller
      */
     public function index()
     {
-        //
+        $data = SubKriteria::all();
+        return view('subkriteria.subkriteria', compact('data'));
     }
 
     /**
@@ -19,7 +22,8 @@ class SubKriteriaController extends Controller
      */
     public function create()
     {
-        //
+        $data = Kriteria::all();
+        return view('subkriteria.addSubKriteria', compact('data'));
     }
 
     /**
@@ -27,23 +31,21 @@ class SubKriteriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $subkriteria = new SubKriteria;
+        $subkriteria->nama_sub_kriteria = $request->nama_sub_kriteria;
+        $subkriteria->bobot = $request->bobot;
+        $subkriteria->kriteria_id = $request->kriteria_id;
+        $subkriteria->save();
+        return redirect()->route('subkriteria.index')->with('success', 'Sub Kriteria berhasil ditambahkan');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $subkriteria = SubKriteria::find($id);
+        $data = Kriteria::all();
+        return view('subkriteria.editSubKriteria', compact('subkriteria', 'data'));
     }
 
     /**
@@ -51,7 +53,12 @@ class SubKriteriaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $subkriteria = SubKriteria::find($id);
+        $subkriteria->nama_sub_kriteria = $request->nama_sub_kriteria;
+        $subkriteria->bobot = $request->bobot;
+        $subkriteria->kriteria_id = $request->kriteria_id;
+        $subkriteria->save();
+        return redirect()->route('subkriteria.index')->with('success', 'Sub Kriteria berhasil diubah');
     }
 
     /**
@@ -59,6 +66,8 @@ class SubKriteriaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $subkriteria = SubKriteria::find($id);
+        $subkriteria->delete();
+        return redirect()->route('subkriteria.index')->with('success', 'Sub Kriteria berhasil dihapus');
     }
 }

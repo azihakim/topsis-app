@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\SubKriteriaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +23,8 @@ Route::get('/', function () {
     return view('master');
 });
 Route::resource('karyawan', KaryawanController::class);
+Route::resource('kriteria', KriteriaController::class);
+Route::resource('subkriteria', SubKriteriaController::class);
 // });
 
 require __DIR__ . '/auth.php';

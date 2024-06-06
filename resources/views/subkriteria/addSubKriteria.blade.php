@@ -1,30 +1,40 @@
 @extends('master')
-@section('title', 'Tambah Karyawan')
+@section('title', 'Tambah Sub Kriteria')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Form Tambah Karyawan</h3>
+                    <h3 class="card-title">Form Tambah Sub Kriteria</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action="{{ route('karyawan.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('subkriteria.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Nama</label>
-                                    <input name="nama" type="text" class="form-control"
-                                        placeholder="Masukkan Nama Karyawan">
+                                    <label>Kriteria</label>
+                                    <select class="form-control" name="kriteria_id">
+                                        <option>Pilih</option>
+                                        @foreach ($data as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_kriteria }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Jabatan</label>
-                                    <input name="jabatan" type="text" class="form-control"
-                                        placeholder="Masukkan Jabatan Karyawan">
+                                    <label>Sub Kriteria</label>
+                                    <input name="nama_sub_kriteria" type="text" class="form-control"
+                                        placeholder="Masukkan Sub Kriteria">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Bobot</label>
+                                    <input name="bobot" type="number" class="form-control" placeholder="Masukkan Bobot">
                                 </div>
                             </div>
                         </div>

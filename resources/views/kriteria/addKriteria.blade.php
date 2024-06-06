@@ -1,40 +1,36 @@
 @extends('master')
-@section('title', 'Edit Karyawan')
+@section('title', 'Tambah Kriteria')
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card card-warning">
+            <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Form Edit Karyawan</h3>
+                    <h3 class="card-title">Form Tambah Kriteria</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action="{{ route('karyawan.update', $karyawan->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('kriteria.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('put')
-
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label>Nama</label>
-                                    <input value="{{ $karyawan->nama }}" name="nama" type="text" class="form-control"
-                                        placeholder="Masukkan Nama karyawan">
+                                    <label>Kriteria</label>
+                                    <input name="nama_kriteria" type="text" class="form-control"
+                                        placeholder="Masukkan Kriteria">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label>Jabatan</label>
-                                    <input value="{{ $karyawan->jabatan }}" name="jabatan" type="text"
-                                        class="form-control" placeholder="Masukkan Jabatan karyawan">
+                                    <label>Bobot</label>
+                                    <input name="bobot" type="number" class="form-control" placeholder="Masukkan Bobot">
                                 </div>
-
                             </div>
                         </div>
 
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-warning">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
             </div>

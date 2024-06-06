@@ -86,15 +86,21 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="{{ url('/dokumen') }}" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dokumen</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="{{ url('/karyawan') }}" class="nav-link">
                                 <i class="nav-icon fas fa-user-alt"></i>
                                 <p>Karyawan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/kriteria') }}" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>Kriteria</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/subkriteria') }}" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>Sub Kriteria</p>
                             </a>
                         </li>
                     </ul>

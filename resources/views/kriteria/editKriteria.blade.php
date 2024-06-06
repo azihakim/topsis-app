@@ -1,15 +1,15 @@
 @extends('master')
-@section('title', 'Edit Karyawan')
+@section('title', 'Edit Pegawai')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card card-warning">
                 <div class="card-header">
-                    <h3 class="card-title">Form Edit Karyawan</h3>
+                    <h3 class="card-title">Form Edit Pegawai</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action="{{ route('karyawan.update', $karyawan->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('kriteria.update', $kriteria->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('put')
 
@@ -18,15 +18,15 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Nama</label>
-                                    <input value="{{ $karyawan->nama }}" name="nama" type="text" class="form-control"
-                                        placeholder="Masukkan Nama karyawan">
+                                    <input value="{{ $kriteria->nama_kriteria }}" name="nama_kriteria" type="text"
+                                        class="form-control" placeholder="Masukkan Nama kriteria">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label>Jabatan</label>
-                                    <input value="{{ $karyawan->jabatan }}" name="jabatan" type="text"
-                                        class="form-control" placeholder="Masukkan Jabatan karyawan">
+                                    <label>bobot</label>
+                                    <input value="{{ $kriteria->bobot }}" name="bobot" type="text" class="form-control"
+                                        placeholder="Masukkan bobot kriteria">
                                 </div>
 
                             </div>
