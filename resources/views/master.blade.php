@@ -93,6 +93,12 @@
                                 <p>Sub Kriteria</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('penilaian.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-edit"></i>
+                                <p>Penilaian</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
