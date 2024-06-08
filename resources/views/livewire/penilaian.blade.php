@@ -11,13 +11,15 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label>Nama</label>
-                            <input type="text" class="form-control" wire:model="nama_karyawan.{{ $karyawan->id }}">
+                            <input disabled type="text" class="form-control"
+                                wire:model="nama_karyawan.{{ $karyawan->id }}">
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label>Divisi</label>
-                            <input type="text" class="form-control" wire:model="divisi_karyawan.{{ $karyawan->id }}">
+                            <input disabled type="text" class="form-control"
+                                wire:model="divisi_karyawan.{{ $karyawan->id }}">
                         </div>
                     </div>
                 </div>
@@ -26,12 +28,13 @@
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label>{{ $item->nama_sub_kriteria }}</label>
-                                <input type="text" class="form-control"
+                                <input required type="number" class="form-control"
                                     wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}">
                             </div>
                         </div>
                     @endforeach
                 </div>
+                <hr>
             @endforeach
             <a wire:click="simpan" class="btn btn-primary">
                 Simpan

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('karyawan_id');
             $table->foreign('karyawan_id')->references('id')->on('karyawans');
             $table->string('tgl_penilaian');
-            $table->string('data');
+            $table->text('data');
             $table->timestamps();
         });
     }
