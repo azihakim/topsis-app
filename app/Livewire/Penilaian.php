@@ -23,6 +23,12 @@ class Penilaian extends Component
     public $bbt_tanggung_jawab = 24.66;
     public $bbt_sikap = 23.29;
 
+    public $ket_kehadiran = 'Benefit';
+    public $ket_kinerja = 'Benefit';
+    public $ket_tanggung_jawab = 'Benefit';
+    public $ket_sikap = 'Benefit';
+
+
     public function mount()
     {
         $this->karyawans = Karyawan::all();
@@ -85,8 +91,6 @@ class Penilaian extends Component
             // Tambahkan data ke dalam array $semuaData
             $semuaData[] = $data;
         }
-        // dd($semuaData);
-
 
         $sumKehadiran = 0;
         $sumKinerja = 0;
@@ -98,7 +102,6 @@ class Penilaian extends Component
         $sqrtTanggungJawab = 0;
         $sqrtSikap = 0;
 
-
         // Loop melalui semua data
         $dataSemua = $semuaData;
         foreach ($dataSemua as &$item) {
@@ -106,6 +109,7 @@ class Penilaian extends Component
                 $subCriteria['total'] = pow((int)$subCriteria['total'], 2);
             }
         }
+        // dd($dataSemua);
         foreach ($dataSemua as $data) {
             // Periksa apakah kategori ada dalam data
 
@@ -130,13 +134,97 @@ class Penilaian extends Component
                 $sqrtSikap = sqrt($sumSikap);
             }
         }
-        // dd($sumKehadiran, $sumKinerja, $sumTanggungJawab, $sumSikap);
-        dd($sqrtKehadiran, $sqrtKinerja, $sqrtTanggungJawab, $sqrtSikap);
+        // dd($sqrtKehadiran, $sqrtKinerja, $sqrtTanggungJawab, $sqrtSikap);
 
-        // $penilaian->data = json_encode(['bobot' => $bobotArray, 'total' => $hasilAkarKuadratKaryawan]);
+        $data_r = $semuaData;
+        foreach ($data_r as &$item) {
+            if (isset($item['bobot']['Kehadiran']['total'])) {
+                $item['bobot']['Kehadiran']['total'] = $item['bobot']['Kehadiran']['total'] / $sqrtKehadiran;
+            }
+            if (isset($item['bobot']['Kinerja']['total'])) {
+                $item['bobot']['Kinerja']['total'] = $item['bobot']['Kinerja']['total'] / $sqrtKinerja;
+            }
+            if (isset($item['bobot']['Tanggung Jawab']['total'])) {
+                $item['bobot']['Tanggung Jawab']['total'] = $item['bobot']['Tanggung Jawab']['total'] / $sqrtTanggungJawab;
+            }
+            if (isset($item['bobot']['Sikap']['total'])) {
+                $item['bobot']['Sikap']['total'] = $item['bobot']['Sikap']['total'] / $sqrtSikap;
+            }
+        }
+        // dd($data_r);
+
+        $data_y = $data_r;
+        foreach ($data_y as &$item) {
+            $item['bobot']['Kehadiran']['total'] = $item['bobot']['Kehadiran']['total'] * $this->bbt_kehadiran;
+            $item['bobot']['Kinerja']['total'] = $item['bobot']['Kinerja']['total'] * $this->bbt_kinerja;
+            $item['bobot']['Tanggung Jawab']['total'] = $item['bobot']['Tanggung Jawab']['total'] * $this->bbt_tanggung_jawab;
+            $item['bobot']['Sikap']['total'] = $item['bobot']['Sikap']['total'] * $this->bbt_sikap;
+        }
+        // dd($data_y);
+
+        $data_ap = $data_y;
+        $kehadiran_totals = [];
+        $kinerja_totals = [];
+        $tanggung_jawab_totals = [];
+        $sikap_totals = [];
+
+        foreach ($data_ap as &$item) {
+            // Collecting total values
+            $kehadiran_totals[] = $item['bobot']['Kehadiran']['total'];
+            $kinerja_totals[] = $item['bobot']['Kinerja']['total'];
+            $tanggung_jawab_totals[] = $item['bobot']['Tanggung Jawab']['total'];
+            $sikap_totals[] = $item['bobot']['Sikap']['total'];
+        }
+
+        if ($this->ket_kehadiran == 'Benefit') {
+            $kehadiran_ap = max($kehadiran_totals);
+        } else {
+            $kehadiran_ap = min($kehadiran_totals);
+        }
+        if ($this->ket_kinerja == 'Benefit') {
+            $kinerja_ap = max($kinerja_totals);
+        } else {
+            $kinerja_ap = min($kinerja_totals);
+        }
+        if ($this->ket_tanggung_jawab == 'Benefit') {
+            $tanggung_jawab_ap = max($tanggung_jawab_totals);
+        } else {
+            $tanggung_jawab_ap = min($tanggung_jawab_totals);
+        }
+        if ($this->ket_sikap == 'Benefit') {
+            $sikap_ap = max($sikap_totals);
+        } else {
+            $sikap_ap = min($sikap_totals);
+        }
+
+        if ($this->ket_kehadiran == 'Cost') {
+            $kehadiran_am = max($kehadiran_totals);
+        } else {
+            $kehadiran_am = min($kehadiran_totals);
+        }
+        if ($this->ket_kinerja == 'Cost') {
+            $kinerja_am = max($kinerja_totals);
+        } else {
+            $kinerja_am = min($kinerja_totals);
+        }
+        if ($this->ket_tanggung_jawab == 'Cost') {
+            $tanggung_jawab_am = max($tanggung_jawab_totals);
+        } else {
+            $tanggung_jawab_am = min($tanggung_jawab_totals);
+        }
+        if ($this->ket_sikap == 'Cost') {
+            $sikap_am = max($sikap_totals);
+        } else {
+            $sikap_am = min($sikap_totals);
+        }
+
+
+        dd($kehadiran_ap, $kinerja_ap, $tanggung_jawab_ap, $sikap_ap, '---', $kehadiran_am, $kinerja_am, $tanggung_jawab_am, $sikap_am);
+        dd($data_ap);
+
+
+
         // $penilaian->save();
-
-        // Reset input
         // $this->reset(['tgl_penilaian', 'bobot']);
     }
 
