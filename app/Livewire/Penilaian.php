@@ -228,7 +228,7 @@ class Penilaian extends Component
             $total_dm = $total_kuadrat_dm[$index];
             $data_v[] = [
                 'index' => $index,
-                'value' => $total_dm / ($total_dm + $total_dp)
+                'value' => ($total_dm + $total_dp != 0) ? $total_dm / ($total_dm + $total_dp) : 0
             ];
         }
 
