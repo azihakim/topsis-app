@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_kriteria');
             $table->float('bobot');
             $table->float('nilai');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

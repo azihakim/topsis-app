@@ -18,7 +18,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <table id="example1" class="table-bordered table-striped table">
+            <table id="example3" class="table-bordered table-striped table">
                 <thead>
                     <tr>
                         <th>Nama</th>

@@ -6,6 +6,9 @@ use App\Models\Karyawan;
 use App\Models\Kriteria;
 use App\Models\PenilaianDb;
 use App\Models\SubKriteria;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
 
 class Penilaian extends Component
@@ -17,11 +20,12 @@ class Penilaian extends Component
     public $sub_kriteria = [];
     public $tgl_penilaian = 'p';
     public $bobot = [];
+    public $data_penilaian;
+    // public $ket_kehadiran = 'Benefit';
+    // public $ket_kinerja = 'Benefit';
+    // public $ket_tanggung_jawab = 'Benefit';
+    // public $ket_sikap = 'Benefit';
 
-    public $ket_kehadiran = 'Benefit';
-    public $ket_kinerja = 'Benefit';
-    public $ket_tanggung_jawab = 'Benefit';
-    public $ket_sikap = 'Benefit';
 
 
     public function mount()
@@ -53,7 +57,6 @@ class Penilaian extends Component
             $penilaian = new PenilaianDb();
             $penilaian->karyawan_id = $sub->id;
             $penilaian->tgl_penilaian = $this->tgl_penilaian;
-
             $bobotArray = [];
 
             foreach ($this->bobot[$sub->id] as $subKriteriaId => $bobot) {
@@ -90,6 +93,7 @@ class Penilaian extends Component
             $penilaian->data = json_encode(['bobot' => $bobotArray]);
             array_push($semuaPenilaian, $penilaian);
         }
+        // dd($penilaian);
 
         foreach ($semuaPenilaian as $penilaian) {
             $data = json_decode($penilaian->data, true);
@@ -155,34 +159,78 @@ class Penilaian extends Component
             }
         }
         // dd($kriteria_totals);
+        // foreach ($kriteria_totals as $kriteria => &$totals) {
+        //     if ($this->ket_kehadiran == 'Benefit') {
+        //         $data_ap[$kriteria] = max(($totals));
+        //     } else {
+        //         $data_ap[$kriteria] = min(($totals));
+        //     }
+        // }
         $data_ap = [];
+
         foreach ($kriteria_totals as $kriteria => &$totals) {
-            if ($this->ket_kehadiran == 'Benefit') {
-                $data_ap[$kriteria] = max(($totals));
+            // Dapatkan data kriteria dari database berdasarkan nama kriteria
+            $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
+
+            // Tentukan keterangan kriteria berdasarkan data dari database
+            if ($data_kriteria) {
+                if ($data_kriteria->keterangan == 'Benefit') {
+                    // Lakukan operasi untuk kriteria benefit
+                    $data_ap[$kriteria] = max($totals);
+                } elseif ($data_kriteria->keterangan == 'Cost') {
+                    // Lakukan operasi untuk kriteria cost
+                    $data_ap[$kriteria] = min($totals);
+                } else {
+                    // Jika keterangan tidak valid, atur default
+                    $data_ap[$kriteria] = 'Keterangan tidak valid';
+                }
             } else {
-                $data_ap[$kriteria] = min(($totals));
+                // Jika data kriteria tidak ditemukan, atur default
+                $data_ap[$kriteria] = 'Data kriteria tidak ditemukan';
             }
         }
         // dd($data_ap);
 
+        // $data_am = [];
+        // foreach ($kriteria_totals as $kriteria => &$totals) {
+        //     if ($this->ket_kehadiran == 'Cost') {
+        //         $data_am[$kriteria] = max(($totals));
+        //     } else {
+        //         $data_am[$kriteria] = min(($totals));
+        //     }
+        // }
+
         $data_am = [];
+
         foreach ($kriteria_totals as $kriteria => &$totals) {
-            if ($this->ket_kehadiran == 'Cost') {
-                $data_am[$kriteria] = max(($totals));
+            // Dapatkan data kriteria dari database berdasarkan nama kriteria
+            $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
+
+            // Tentukan keterangan kriteria berdasarkan data dari database
+            if ($data_kriteria) {
+                if ($data_kriteria->keterangan == 'Cost') {
+                    // Lakukan operasi untuk kriteria cost
+                    $data_am[$kriteria] = max($totals);
+                } elseif ($data_kriteria->keterangan == 'Benefit') {
+                    // Lakukan operasi untuk kriteria benefit
+                    $data_am[$kriteria] = min($totals);
+                } else {
+                    // Jika keterangan tidak valid, atur default
+                    $data_am[$kriteria] = 'Keterangan tidak valid';
+                }
             } else {
-                $data_am[$kriteria] = min(($totals));
+                // Jika data kriteria tidak ditemukan, atur default
+                $data_am[$kriteria] = 'Data kriteria tidak ditemukan';
             }
         }
         // dd($data_am);
 
-        // Inisialisasi array jarak$jarak = [];
 
         // Mengambil semua karyawan
         foreach ($this->karyawans as $karyawan) {
             $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
         }
-        // dd($data_ap);
-        // dd($data_y);
+
         $data_dp = $data_y;
 
         foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
@@ -209,13 +257,6 @@ class Penilaian extends Component
             }
         }
 
-        // dd($data_ap, "<br>", $data_am);
-        // dd($data_dp, "<br>", $data_dm);
-        // dd($data_dp);
-        // $total_kuadrat = array_column($data_dp, 'total_kuadrat');
-        // dd($total_kuadrat);
-
-
 
         $data_v = [];
 
@@ -231,24 +272,68 @@ class Penilaian extends Component
                 'value' => ($total_dm + $total_dp != 0) ? $total_dm / ($total_dm + $total_dp) : 0
             ];
         }
-
         // Urutkan array data_v secara descending berdasarkan nilai
         usort($data_v, function ($a, $b) {
             return $b['value'] <=> $a['value'];
         });
-
+        // dd($data_v);
         // Berikan peringkat kepada setiap karyawan
+        $hasil_akhir = [];
         foreach ($data_v as $rank => $item) {
             $karyawan_index = $item['index'];
-            $this->karyawans[$karyawan_index]['data_v'] = $item['value'];
-            $this->karyawans[$karyawan_index]['rank'] = $rank + 1; // Penambahan +1 karena indeks dimulai dari 0
+            $karyawan_nama = $nama_karyawan[$karyawan_index];
+            $data_penilaian = [
+                'nama_karyawan' => $karyawan_nama,
+                'data_v' => $item['value'],
+                'rank' => $rank + 1
+            ];
+            $hasil_akhir[] = $data_penilaian;
         }
 
-        dd($this->karyawans);
+        // dd($hasil_akhir);
+
+        $semuaPenilaian = [];
+        foreach ($hasil_akhir as $hasil) {
+            // Cari ID karyawan berdasarkan nama karyawan
+            $nama_karyawan = $hasil['nama_karyawan'];
+            $karyawan = Karyawan::where('nama', $nama_karyawan)->first();
+
+            // Buat entri baru dalam PenilaianDb jika karyawan ditemukan
+
+            $penilaian = new PenilaianDb();
+            $penilaian->karyawan_id = $karyawan->id; // Masukkan ID karyawan
+            $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
+            $penilaian->data = json_encode($hasil);
+            $penilaian->save();
+
+            $semuaPenilaian[] = $penilaian;
+        }
+        // $this->tgl_penilaian = $penilaian->tgl_penilaian;
+        // $this->cetakLaporan($semuaPenilaian);
+        return redirect()->route('penilaian.index');
+    }
 
 
+    public function cetakLaporan($semuaPenilaian)
+    {
+        // Ensure UTF-8 encoding for all strings
+        array_walk_recursive($semuaPenilaian, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
 
-        // $penilaian->save();
-        // $this->reset(['tgl_penilaian', 'bobot']);
+        $penilaian = $semuaPenilaian;
+        $content = Pdf::loadView('penilaian.cetakLaporan', compact('penilaian'));
+
+        // Set file name for the downloaded PDF
+        $filename = 'Hasil Penilaian ' . $this->tgl_penilaian . '.pdf';
+
+        return response()->streamDownload(
+            function () use ($content) {
+                echo $content->stream();
+            },
+            $filename
+        );
     }
 }
