@@ -28,13 +28,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($penilaian as $item)
+                    @foreach ($penilaian as $index => $item)
                         @php
                             $data = json_decode($item->data);
                             // dd($data);
                         @endphp
                         <tr>
-                            <td>{{ $item->id }}</td>
+                            <td>{{ $index + 1 }}</td>
                             <td>{{ $data->nama_karyawan }}</td>
                             <td>{{ $item->tgl_penilaian }}</td>
                             <td>
