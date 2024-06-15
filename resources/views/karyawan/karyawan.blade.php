@@ -1,10 +1,10 @@
 @extends('master')
-@section('title', 'Kriteria')
+@section('title', 'Karyawan')
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Data Kriteria</h3>
-            <a href="{{ url('karyawan/create') }}" class="btn btn-primary float-right">Tambah Kriteria</a>
+            <h3 class="card-title">Data Karyawan</h3>
+            <a href="{{ url('karyawan/create') }}" class="btn btn-primary float-right">Tambah Karyawan</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
