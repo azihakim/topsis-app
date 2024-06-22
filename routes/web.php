@@ -19,16 +19,15 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// Route::middleware('auth')->group(function () {
-Route::get('/', function () {
-    return view('master');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('master');
+    });
+    Route::resource('karyawan', KaryawanController::class);
+    Route::resource('kriteria', KriteriaController::class);
+    Route::resource('subkriteria', SubKriteriaController::class);
+
+    Route::resource('penilaian', PenilaianController::class);
 });
-Route::resource('karyawan', KaryawanController::class);
-Route::resource('kriteria', KriteriaController::class);
-Route::resource('subkriteria', SubKriteriaController::class);
-
-Route::resource('penilaian', PenilaianController::class);
-
-// });
 
 require __DIR__ . '/auth.php';
