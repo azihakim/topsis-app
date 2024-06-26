@@ -29,16 +29,35 @@
                             <div class="form-group">
                                 <label>{{ $item->nama_sub_kriteria }}</label>
                                 <input required type="number" class="form-control"
-                                    wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}">
+                                    wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
+                                    max="{{ $item->bobot }}"
+                                    wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
+                                <div>
+                                    @error('bobot.' . $karyawan->id . '.' . $item->id)
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @else
+                                        <span class="text-danger invisible">Error message</span>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     @endforeach
+
+
                 </div>
                 <hr>
             @endforeach
-            <a wire:click="simpan" class="btn btn-primary">
+            {{-- <a wire:click="simpan" class="btn btn-primary">
                 Simpan
-            </a>
+            </a> --}}
+            @if (session('error'))
+                <div class="alert alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+            <button type="submit" wire:click="simpan" class="btn btn-primary">
+                Simpan
+            </button>
         </div>
         <!-- /.card-body -->
     </div>

@@ -45,9 +45,84 @@ class Penilaian extends Component
         return view('livewire.penilaian');
     }
 
+    public function calculateMultiplication($karyawanId, $subKriteriaId, $namaSubKriteria, $bobot)
+    {
+        // Ambil nilai dari input
+        $nilai = $this->bobot[$karyawanId][$subKriteriaId];
+        // Inisialisasi $hasilPerkalian dengan nilai default
+        $hasilPerkalian = null;
+
+        // Tentukan faktor perkalian berdasarkan nama sub kriteria
+        if ($namaSubKriteria === 'Tepat Waktu') {
+            if ($nilai > $bobot) {
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
+            } else {
+                $hasilPerkalian = ($nilai * 0.015) * 100;
+                $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+            }
+        } elseif ($namaSubKriteria === 'Total Jam Kerja') {
+            if ($nilai > $bobot) {
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
+            } else {
+                $hasilPerkalian = ($nilai * 0.0267) * 100;
+                $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+            }
+        } elseif ($namaSubKriteria === 'Izin Kerja') {
+            if ($nilai > $bobot) {
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
+            } else {
+                $hasilPerkalian = (($bobot - $nilai) * 0.015) * 100;
+                $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+            }
+        } else {
+            if ($nilai > $bobot) {
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
+            } else
+                $hasilPerkalian = $nilai;
+            $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+        }
+
+        // Simpan hasil perkalian (misalnya ke dalam array atau model sesuai kebutuhan)
+        $this->bobot[$karyawanId][$subKriteriaId] = $hasilPerkalian;
+    }
+
+
+
+    public function validateForm()
+    {
+        $isValid = true;
+
+        foreach ($this->karyawans as $karyawan) {
+            foreach ($this->sub_kriteria as $subKriteria) {
+                $karyawanId = $karyawan->id;
+                $subKriteriaId = $subKriteria->id;
+                $namaSubKriteria = $subKriteria->nama_sub_kriteria;
+
+                // Check if the specific sub kriteria needs validation
+
+                // Check if the required field is empty or null
+                if (!isset($this->bobot[$karyawanId][$subKriteriaId]) || $this->bobot[$karyawanId][$subKriteriaId] === null) {
+                    $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' harus diisi.');
+                    $isValid = false; // Set flag to false if there are validation errors
+                } else {
+                    $isValid = true;
+                }
+            }
+        }
+
+        return $isValid;
+    }
+
+
+
 
     public function simpan()
     {
+        if (!$this->validateForm()) {
+            // Jika validasi gagal, kembalikan atau lakukan tindakan yang sesuai
+            return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
+        }
+
         $semuaPenilaian = [];
         $semuaData = [];
         $kriteria_totals = [];

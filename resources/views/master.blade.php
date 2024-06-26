@@ -181,6 +181,7 @@
     <script src="{{ asset('vendors/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- Bootstrap Switch -->
     <script src="{{ asset('vendors/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+    <script src="{{ asset('vendors/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}"></script>
     <!-- BS-Stepper -->
     <script src="{{ asset('vendors/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
     <!-- dropzonejs -->
