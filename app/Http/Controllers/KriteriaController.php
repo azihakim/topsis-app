@@ -33,9 +33,42 @@ class KriteriaController extends Controller
         $kriteria = new Kriteria;
         $kriteria->nama_kriteria = $request->nama_kriteria;
         $kriteria->bobot = $request->bobot;
+        $kriteria->keterangan = 'Benefit';
         $kriteria->save();
+
+        // Hitung total bobot semua kriteria kecuali kriteria yang baru saja ditambahkan
+        $totalBobotLain = Kriteria::where('id', '!=', $kriteria->id)->sum('bobot');
+
+        // Total bobot termasuk kriteria baru
+        $totalBobotSekarang = $totalBobotLain + $kriteria->bobot;
+
+        // Normalisasi bobot jika total bobot termasuk kriteria baru melebihi 100
+        if ($totalBobotSekarang > 100) {
+            // Hitung selisih total bobot dengan 100
+            $selisih = $totalBobotSekarang - 100;
+
+            // Bagikan selisih kepada kriteria yang sudah ada (kecuali kriteria baru)
+            $kriteriaLain = Kriteria::where('id', '!=', $kriteria->id)->get();
+            $totalBobotTerbagi = 0;
+
+            foreach ($kriteriaLain as $kriteriaItem) {
+                $bobotLama = $kriteriaItem->bobot;
+                $bobotBaru = $bobotLama - ($bobotLama / $totalBobotLain) * $selisih;
+
+                // Pastikan bobot baru tidak kurang dari 0.01
+                if ($bobotBaru < 0.01) {
+                    $bobotBaru = 0.01;
+                }
+
+                $kriteriaItem->bobot = $bobotBaru;
+                $kriteriaItem->save();
+                $totalBobotTerbagi += $bobotBaru;
+            }
+        }
         return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil ditambahkan');
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

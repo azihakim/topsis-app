@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\SubKriteriaController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('master');
-    });
+    Route::resource('dashboard', DashboardController::class);
+    Route::get('/', [DashboardController::class, 'index']);
     Route::resource('karyawan', KaryawanController::class);
     Route::resource('kriteria', KriteriaController::class);
     Route::resource('subkriteria', SubKriteriaController::class);

@@ -64,25 +64,21 @@ class DatabaseSeeder extends Seeder
             [
                 'nama_kriteria' => 'Kehadiran',
                 'bobot' => '27.40',
-                'nilai' => '100',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Kinerja',
                 'bobot' => '24.66',
-                'nilai' => '100',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Tanggung Jawab',
                 'bobot' => '24.66',
-                'nilai' => '100',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Sikap',
                 'bobot' => '23.29',
-                'nilai' => '100',
                 'keterangan' => 'Benefit'
             ],
         ];
@@ -91,7 +87,6 @@ class DatabaseSeeder extends Seeder
             Kriteria::create([
                 'nama_kriteria' => $k['nama_kriteria'],
                 'bobot' => $k['bobot'],
-                'nilai' => $k['nilai'],
                 'keterangan' => $k['keterangan'],
             ]);
         }
