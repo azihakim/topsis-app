@@ -21,6 +21,7 @@ class Penilaian extends Component
     public $tgl_penilaian = 'p';
     public $bobot = [];
     public $data_penilaian;
+    public $periode;
     // public $ket_kehadiran = 'Benefit';
     // public $ket_kinerja = 'Benefit';
     // public $ket_tanggung_jawab = 'Benefit';
@@ -54,24 +55,27 @@ class Penilaian extends Component
 
         // Tentukan faktor perkalian berdasarkan nama sub kriteria
         if ($namaSubKriteria === 'Tepat Waktu') {
-            if ($nilai > $bobot) {
+            if ($nilai > 20) {
                 $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
             } else {
                 $hasilPerkalian = ($nilai * 0.015) * 100;
+                $hasilPerkalian = intval($hasilPerkalian);
                 $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
             }
         } elseif ($namaSubKriteria === 'Total Jam Kerja') {
-            if ($nilai > $bobot) {
-                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
+            if ($nilai > 150) {
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melddebihi ' . $bobot . '.');
             } else {
-                $hasilPerkalian = ($nilai * 0.0267) * 100;
+                $hasilPerkalian = ($nilai * 0.00267) * 100;
+                $hasilPerkalian = intval($hasilPerkalian);
                 $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
             }
         } elseif ($namaSubKriteria === 'Izin Kerja') {
-            if ($nilai > $bobot) {
+            if ($nilai > 20) {
                 $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
             } else {
                 $hasilPerkalian = (($bobot - $nilai) * 0.015) * 100;
+                $hasilPerkalian = intval($hasilPerkalian);
                 $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
             }
         } else {
@@ -79,6 +83,7 @@ class Penilaian extends Component
                 $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
             } else
                 $hasilPerkalian = $nilai;
+            $hasilPerkalian = intval($hasilPerkalian);
             $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
         }
 
@@ -104,6 +109,13 @@ class Penilaian extends Component
                 if (!isset($this->bobot[$karyawanId][$subKriteriaId]) || $this->bobot[$karyawanId][$subKriteriaId] === null) {
                     $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' harus diisi.');
                     $isValid = false; // Set flag to false if there are validation errors
+                } else {
+                    $isValid = true;
+                }
+
+                if (!isset($this->periode)) {
+                    $this->addError('periode', 'Periode penilaian harus diisi.');
+                    $isValid = false;
                 } else {
                     $isValid = true;
                 }
@@ -376,6 +388,7 @@ class Penilaian extends Component
             // Buat entri baru dalam PenilaianDb jika karyawan ditemukan
 
             $penilaian = new PenilaianDb();
+            $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
             $penilaian->karyawan_id = $karyawan->id; // Masukkan ID karyawan
             $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
             $penilaian->data = json_encode($hasil);

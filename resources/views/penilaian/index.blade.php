@@ -21,6 +21,7 @@
             <table id="example3" class="table-bordered table-striped table">
                 <thead>
                     <tr>
+                        <th>Periode</th>
                         <th>Tanggal Penilaian</th>
                         <th>Cek Penilaian</th>
                     </tr>
@@ -28,6 +29,9 @@
                 <tbody>
                     @foreach ($uniquePenilaian as $item)
                         <tr>
+                            <td>
+                                {{ $item->periode_penilaian }}
+                            </td>
                             <td>
                                 {{ $item->tgl_penilaian }}
                             </td>
@@ -40,6 +44,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th>Periode</th>
                         <th>Tanggal Penilaian</th>
                         <th>Cek Penilaian</th>
                     </tr>
