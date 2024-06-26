@@ -64,7 +64,7 @@ class Penilaian extends Component
             }
         } elseif ($namaSubKriteria === 'Total Jam Kerja') {
             if ($nilai > 150) {
-                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melddebihi ' . $bobot . '.');
+                $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
             } else {
                 $hasilPerkalian = ($nilai * 0.00267) * 100;
                 $hasilPerkalian = intval($hasilPerkalian);
@@ -74,22 +74,24 @@ class Penilaian extends Component
             if ($nilai > 20) {
                 $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
             } else {
-                $hasilPerkalian = (($bobot - $nilai) * 0.015) * 100;
+                $hasilPerkalian = ((20 - $nilai) * 0.015) * 100;
                 $hasilPerkalian = intval($hasilPerkalian);
                 $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
             }
         } else {
             if ($nilai > $bobot) {
                 $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, 'Penilaian harus tidak melebihi ' . $bobot . '.');
-            } else
-                $hasilPerkalian = $nilai;
-            $hasilPerkalian = intval($hasilPerkalian);
-            $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+            } else {
+                $hasilPerkalian = $nilai * 1;
+                $hasilPerkalian = intval($hasilPerkalian);
+                $this->resetErrorBag('bobot.' . $karyawanId . '.' . $subKriteriaId);
+            }
         }
 
         // Simpan hasil perkalian (misalnya ke dalam array atau model sesuai kebutuhan)
         $this->bobot[$karyawanId][$subKriteriaId] = $hasilPerkalian;
     }
+
 
 
 

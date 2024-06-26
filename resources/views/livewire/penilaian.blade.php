@@ -59,7 +59,7 @@
                                         wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
                                 @else
                                     <label>{{ $item->nama_sub_kriteria }} <br> (Max {{ $item->bobot }})</label>
-                                    <input required placeholder="Masukkan Nilai" type="number" class="form-control"
+                                    <input type="number" class="form-control"
                                         wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
                                         max="{{ $item->bobot }}"
                                         wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
@@ -67,8 +67,6 @@
                                 <div>
                                     @error('bobot.' . $karyawan->id . '.' . $item->id)
                                         <span class="text-danger">{{ $message }}</span>
-                                    @else
-                                        <span class="text-danger invisible">Error message</span>
                                     @enderror
                                 </div>
                             </div>
