@@ -114,13 +114,6 @@ class Penilaian extends Component
                 } else {
                     $isValid = true;
                 }
-
-                if (!isset($this->periode)) {
-                    $this->addError('periode', 'Periode penilaian harus diisi.');
-                    $isValid = false;
-                } else {
-                    $isValid = true;
-                }
             }
         }
 
