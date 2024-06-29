@@ -36,7 +36,7 @@
                                 {{ $item->tgl_penilaian }}
                             </td>
                             <td>
-                                <a href="{{ route('penilaian.show', $item->tgl_penilaian) }}"
+                                <a href="{{ route('penilaian.show', $item->periode_penilaian) }}"
                                     class="btn btn-block btn-outline-info">Cek</a>
                             </td>
                         </tr>

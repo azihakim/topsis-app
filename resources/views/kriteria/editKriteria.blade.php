@@ -18,15 +18,15 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Nama</label>
-                                    <input value="{{ $kriteria->nama_kriteria }}" name="nama_kriteria" type="text"
-                                        class="form-control" placeholder="Masukkan Nama kriteria">
+                                    <input required value="{{ $kriteria->nama_kriteria }}" name="nama_kriteria"
+                                        type="text" class="form-control" placeholder="Masukkan Nama kriteria">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>bobot</label>
-                                    <input value="{{ $kriteria->bobot }}" name="bobot" type="text" class="form-control"
-                                        placeholder="Masukkan bobot kriteria">
+                                    <input required min="0" value="{{ $kriteria->bobot }}" name="bobot"
+                                        type="text" class="form-control" placeholder="Masukkan bobot kriteria">
                                 </div>
 
                             </div>

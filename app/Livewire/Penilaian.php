@@ -48,10 +48,15 @@ class Penilaian extends Component
 
     public function calculateMultiplication($karyawanId, $subKriteriaId, $namaSubKriteria, $bobot)
     {
+        sleep(0.5);
         // Ambil nilai dari input
-        $nilai = $this->bobot[$karyawanId][$subKriteriaId];
+        if (isset($this->bobot[$karyawanId][$subKriteriaId])) {
+            $nilai = $this->bobot[$karyawanId][$subKriteriaId];
+        } else {
+            $nilai = 0;
+        }
         // Inisialisasi $hasilPerkalian dengan nilai default
-        $hasilPerkalian = null;
+        $hasilPerkalian = 0;
 
         // Tentukan faktor perkalian berdasarkan nama sub kriteria
         if ($namaSubKriteria === 'Tepat Waktu') {
@@ -108,8 +113,11 @@ class Penilaian extends Component
                 // Check if the specific sub kriteria needs validation
 
                 // Check if the required field is empty or null
-                if (!isset($this->bobot[$karyawanId][$subKriteriaId]) || $this->bobot[$karyawanId][$subKriteriaId] === null) {
+                if (!isset($this->bobot[$karyawanId][$subKriteriaId]) || $this->bobot[$karyawanId][$subKriteriaId] === null || $this->bobot[$karyawanId][$subKriteriaId] === 0) {
                     $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' harus diisi.');
+                    $isValid = false; // Set flag to false if there are validation errors
+                } elseif ($this->bobot[$karyawanId][$subKriteriaId] < 0) {
+                    $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' tidak boleh bernilai negatif.');
                     $isValid = false; // Set flag to false if there are validation errors
                 } else {
                     $isValid = true;
@@ -384,7 +392,7 @@ class Penilaian extends Component
 
             $penilaian = new PenilaianDb();
             $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
-            $penilaian->karyawan_id = $karyawan->id; // Masukkan ID karyawan
+            $penilaian->karyawan = $karyawan->nama; // Masukkan ID karyawan
             $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
             $penilaian->data = json_encode($hasil);
             $penilaian->save();

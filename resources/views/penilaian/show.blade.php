@@ -4,7 +4,6 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Data Penilaian</h3>
-            <a class="btn btn-primary float-right">Cetak</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">

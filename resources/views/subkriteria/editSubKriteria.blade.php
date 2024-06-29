@@ -19,7 +19,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Kriteria</label>
-                                    <select class="form-control" name="kriteria_id">
+                                    <select required class="form-control" name="kriteria_id">
                                         <option value="{{ $subkriteria->kriteria_id }}">
                                             {{ $subkriteria->kriteria->nama_kriteria }}
                                         </option>
@@ -32,15 +32,15 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Sub Kriteria</label>
-                                    <input name="nama_sub_kriteria" type="text" class="form-control"
+                                    <input required name="nama_sub_kriteria" type="text" class="form-control"
                                         placeholder="Masukkan Sub Kriteria" value="{{ $subkriteria->nama_sub_kriteria }}">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Bobot</label>
-                                    <input name="bobot" type="number" class="form-control" placeholder="Masukkan Bobot"
-                                        value="{{ $subkriteria->bobot }}">
+                                    <input min="0" required name="bobot" type="number" class="form-control"
+                                        placeholder="Masukkan Bobot" value="{{ $subkriteria->bobot }}">
                                 </div>
                             </div>
                         </div>

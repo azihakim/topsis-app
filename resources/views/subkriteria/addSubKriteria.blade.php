@@ -16,8 +16,8 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Kriteria</label>
-                                    <select class="form-control" name="kriteria_id">
-                                        <option>Pilih</option>
+                                    <select required class="form-control" name="kriteria_id">
+                                        <option value="">Pilih</option>
                                         @foreach ($data as $item)
                                             <option value="{{ $item->id }}">{{ $item->nama_kriteria }}</option>
                                         @endforeach
@@ -27,14 +27,15 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Sub Kriteria</label>
-                                    <input name="nama_sub_kriteria" type="text" class="form-control"
+                                    <input required name="nama_sub_kriteria" type="text" class="form-control"
                                         placeholder="Masukkan Sub Kriteria">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Bobot</label>
-                                    <input name="bobot" type="number" class="form-control" placeholder="Masukkan Bobot">
+                                    <input min="0" required name="bobot" type="number" class="form-control"
+                                        placeholder="Masukkan Bobot">
                                 </div>
                             </div>
                         </div>

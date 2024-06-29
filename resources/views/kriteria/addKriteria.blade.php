@@ -16,14 +16,15 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Kriteria</label>
-                                    <input name="nama_kriteria" type="text" class="form-control"
+                                    <input required name="nama_kriteria" type="text" class="form-control"
                                         placeholder="Masukkan Kriteria">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Bobot</label>
-                                    <input name="bobot" type="number" class="form-control" placeholder="Masukkan Bobot">
+                                    <input required name="bobot" type="number" class="form-control"
+                                        placeholder="Masukkan Bobot" min="0">
                                 </div>
                             </div>
                         </div>
