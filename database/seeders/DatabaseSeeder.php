@@ -57,31 +57,31 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123'),
         ]);
 
-        $karyawan = [
-            [
-                'nama' => 'Anwar Zemmi',
-                'divisi' => 'Kantor'
-            ],
-            [
-                'nama' => 'Faisal Riza',
-                'divisi' => 'Lapangan'
-            ],
-            [
-                'nama' => 'M. Lendra',
-                'divisi' => 'Kantor'
-            ],
-            [
-                'nama' => 'Nicolas Alex',
-                'divisi' => 'Lapangan'
-            ],
-        ];
+        // $karyawan = [
+        //     [
+        //         'nama' => 'Anwar Zemmi',
+        //         'divisi' => 'Kantor'
+        //     ],
+        //     [
+        //         'nama' => 'Faisal Riza',
+        //         'divisi' => 'Lapangan'
+        //     ],
+        //     [
+        //         'nama' => 'M. Lendra',
+        //         'divisi' => 'Kantor'
+        //     ],
+        //     [
+        //         'nama' => 'Nicolas Alex',
+        //         'divisi' => 'Lapangan'
+        //     ],
+        // ];
 
-        foreach ($karyawan as $k) {
-            Karyawan::create([
-                'nama' => $k['nama'],
-                'divisi' => $k['divisi'],
-            ]);
-        }
+        // foreach ($karyawan as $k) {
+        //     Karyawan::create([
+        //         'nama' => $k['nama'],
+        //         'divisi' => $k['divisi'],
+        //     ]);
+        // }
 
         $kriteria = [
             [
