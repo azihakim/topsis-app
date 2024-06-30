@@ -57,7 +57,10 @@ class KaryawanController extends Controller
     public function edit($id)
     {
         $karyawan = Karyawan::find($id);
-        return view('karyawan.editKaryawan', compact('karyawan'));
+        $nama = $karyawan->nama;
+        $user = user::all()->where('name', $nama)->first();
+        // dd($user);
+        return view('karyawan.editKaryawan', compact('karyawan', 'user'));
     }
 
     /**
@@ -69,6 +72,17 @@ class KaryawanController extends Controller
         $karyawan->nama = $request->nama;
         $karyawan->divisi = $request->divisi;
         $karyawan->save();
+
+        $nama = $karyawan->nama;
+
+        $user = user::all()->where('name', $nama)->first();
+        $user->name = $request->nama;
+        $user->username = $request->username;
+        if ($request->password != null) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->role = 'Karyawan';
+        $user->save();
 
         return redirect()->route('karyawan.index');
     }
