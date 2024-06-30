@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Dokumen;
 use App\Models\Karyawan;
 use App\Models\Pegawai;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class KaryawanController extends Controller
@@ -32,10 +34,18 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $karyawan = new Karyawan;
         $karyawan->nama = $request->nama;
         $karyawan->divisi = $request->divisi;
         $karyawan->save();
+
+        $user = new User();
+        $user->name = $request->nama;
+        $user->username = $request->username;
+        $user->password = Hash::make($request->password);
+        $user->role = 'Karyawan';
+        $user->save();
 
         return redirect()->route('karyawan.index')
             ->with('success', 'Karyawan Berhasil diSimpan.');

@@ -85,24 +85,26 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/karyawan') }}" class="nav-link">
-                                <i class="nav-icon fas fa-user-alt"></i>
-                                <p>Karyawan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/kriteria') }}" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>Kriteria</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/subkriteria') }}" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>Sub Kriteria</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->role != 'Karyawan')
+                            <li class="nav-item">
+                                <a href="{{ url('/karyawan') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-user-alt"></i>
+                                    <p>Karyawan</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/kriteria') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                    <p>Kriteria</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/subkriteria') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                    <p>Sub Kriteria</p>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('penilaian.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>

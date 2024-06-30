@@ -27,6 +27,18 @@
                                         placeholder="Masukkan Divisi Karyawan">
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input name="username" type="text" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input name="password" type="password" class="form-control" placeholder="">
+                                </div>
+                            </div>
                         </div>
 
                     </div>

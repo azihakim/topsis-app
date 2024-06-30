@@ -4,7 +4,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Data Penilaian</h3>
-            <a href="{{ route('penilaian.create') }}" class="btn btn-primary float-right">Tambah Penilaian</a>
+            @if (Auth::user()->role != 'Karyawan')
+                <a href="{{ route('penilaian.create') }}" class="btn btn-primary float-right">Tambah Penilaian</a>
+            @endif
         </div>
         <!-- /.card-header -->
         <div class="card-body">

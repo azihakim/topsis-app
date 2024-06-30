@@ -4,7 +4,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Data Karyawan</h3>
-            <a href="{{ url('karyawan/create') }}" class="btn btn-primary float-right">Tambah Karyawan</a>
+            @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+                <a href="{{ url('karyawan/create') }}" class="btn btn-primary float-right">Tambah Karyawan</a>
+            @endif
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -23,7 +25,9 @@
                     <tr>
                         <th>Nama</th>
                         <th>Divisi</th>
-                        <th>Aksi</th>
+                        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+                            <th>Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -31,22 +35,24 @@
                         <tr>
                             <td>{{ $item->nama }}</td>
                             <td>{{ $item->divisi }}</td>
-                            <td>
-                                <div class="row">
-                                    <div class= "col-6">
-                                        <a class="btn btn-block btn-outline-warning"
-                                            href="{{ url('karyawan/' . $item->id . '/edit') }}">Edit</a>
+                            @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+                                <td>
+                                    <div class="row">
+                                        <div class= "col-6">
+                                            <a class="btn btn-block btn-outline-warning"
+                                                href="{{ url('karyawan/' . $item->id . '/edit') }}">Edit</a>
+                                        </div>
+                                        <div class= "col-6">
+                                            <form id="deleteForm{{ $item->id }}"
+                                                action="{{ url('karyawan/' . $item->id) }} " method="POST">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button class="btn btn-block btn-outline-danger delete-btn">Hapus</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <div class= "col-6">
-                                        <form id="deleteForm{{ $item->id }}"
-                                            action="{{ url('karyawan/' . $item->id) }} " method="POST">
-                                            @csrf
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button class="btn btn-block btn-outline-danger delete-btn">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
@@ -54,7 +60,9 @@
                     <tr>
                         <th>Nama</th>
                         <th>Divisi</th>
-                        <th>Aksi</th>
+                        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+                            <th>Aksi</th>
+                        @endif
                     </tr>
                 </tfoot>
             </table>
