@@ -34,22 +34,32 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        // Validasi input termasuk pengecekan unik untuk username
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'divisi' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username',
+            'password' => 'required|string|min:8|confirmed'
+        ]);
+
+        // Simpan data karyawan
         $karyawan = new Karyawan;
         $karyawan->nama = $request->nama;
         $karyawan->divisi = $request->divisi;
-        $karyawan->save();
+        // $karyawan->save();
 
+        // Simpan data user
         $user = new User();
         $user->name = $request->nama;
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->role = 'Karyawan';
-        $user->save();
-
+        // $user->save();
+        dd($karyawan, $user);
         return redirect()->route('karyawan.index')
             ->with('success', 'Karyawan Berhasil diSimpan.');
     }
+
 
     /**
      * Show the form for editing the specified resource.

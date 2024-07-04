@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>Kriteria</th>
-                        <th>Nilai</th>
+                        <th>Bobot</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -53,7 +53,7 @@
                 <tfoot>
                     <tr>
                         <th>Kriteria</th>
-                        <th>Nilai</th>
+                        <th>Bobot</th>
                         <th>Aksi</th>
                     </tr>
                 </tfoot>

@@ -100,6 +100,7 @@ class Penilaian extends Component
 
 
 
+
     public function validateForm()
     {
         $isValid = true;
@@ -124,12 +125,57 @@ class Penilaian extends Component
                 }
             }
         }
+        foreach ($this->karyawans as $karyawan) {
+            foreach ($this->sub_kriteria as $item) {
+                // Lakukan perhitungan seperti yang ada di calculateMultiplication
+                // Ambil nilai dari input
+                if (isset($this->bobot[$karyawan->id][$item->id])) {
+                    $nilai = $this->bobot[$karyawan->id][$item->id];
+                } else {
+                    $nilai = 0;
+                }
+
+                // Inisialisasi $hasilPerkalian dengan nilai default
+                $hasilPerkalian = 0;
+
+                // Tentukan faktor perkalian berdasarkan nama sub kriteria
+                if ($item->nama_sub_kriteria === 'Tepat Waktu') {
+                    if ($nilai > 20) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                        $isValid = false;
+                    } else {
+                        $hasilPerkalian = $nilai;
+                    }
+                } elseif ($item->nama_sub_kriteria === 'Total Jam Kerja') {
+                    if ($nilai > 150) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                        $isValid = false;
+                    } else {
+                        $hasilPerkalian = $nilai;
+                    }
+                } elseif ($item->nama_sub_kriteria === 'Izin Kerja') {
+                    if ($nilai > 20) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                        $isValid = false;
+                    } else {
+                        $hasilPerkalian = $nilai;
+                    }
+                } else {
+                    if ($nilai > $item->bobot) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                        $isValid = false;
+                    } else {
+                        $hasilPerkalian = $nilai;
+                    }
+                }
+
+                // Simpan hasil perkalian (misalnya ke dalam array atau model sesuai kebutuhan)
+                $this->bobot[$karyawan->id][$item->id] = $hasilPerkalian;
+            }
+        }
 
         return $isValid;
     }
-
-
-
 
     public function simpan()
     {
@@ -137,6 +183,63 @@ class Penilaian extends Component
             // Jika validasi gagal, kembalikan atau lakukan tindakan yang sesuai
             return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
         }
+        // Lakukan iterasi untuk setiap karyawan
+        foreach ($this->karyawans as $karyawan) {
+            foreach ($this->sub_kriteria as $item) {
+                // Lakukan perhitungan seperti yang ada di calculateMultiplication
+                // Ambil nilai dari input
+                if (isset($this->bobot[$karyawan->id][$item->id])) {
+                    $nilai = $this->bobot[$karyawan->id][$item->id];
+                } else {
+                    $nilai = 0;
+                }
+
+                // Inisialisasi $hasilPerkalian dengan nilai default
+                $hasilPerkalian = 0;
+
+                // Tentukan faktor perkalian berdasarkan nama sub kriteria
+                if ($item->nama_sub_kriteria === 'Tepat Waktu') {
+                    if ($nilai > 20) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                    } else {
+                        $hasilPerkalian = ($nilai * 0.015) * 100;
+                        $hasilPerkalian = intval($hasilPerkalian);
+                        $this->resetErrorBag('bobot.' . $karyawan->id . '.' . $item->id);
+                    }
+                } elseif ($item->nama_sub_kriteria === 'Total Jam Kerja') {
+                    if ($nilai > 150) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                    } else {
+                        $hasilPerkalian = ($nilai * 0.00267) * 100;
+                        $hasilPerkalian = intval($hasilPerkalian);
+                        $this->resetErrorBag('bobot.' . $karyawan->id . '.' . $item->id);
+                    }
+                } elseif ($item->nama_sub_kriteria === 'Izin Kerja') {
+                    if ($nilai > 20) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                    } else {
+                        $hasilPerkalian = ((20 - $nilai) * 0.015) * 100;
+                        $hasilPerkalian = intval($hasilPerkalian);
+                        $this->resetErrorBag('bobot.' . $karyawan->id . '.' . $item->id);
+                    }
+                } else {
+                    if ($nilai > $item->bobot) {
+                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
+                    } else {
+                        $hasilPerkalian = $nilai * 1;
+                        $hasilPerkalian = intval($hasilPerkalian);
+                        $this->resetErrorBag('bobot.' . $karyawan->id . '.' . $item->id);
+                    }
+                }
+
+                // Simpan hasil perkalian (misalnya ke dalam array atau model sesuai kebutuhan)
+                $this->bobot[$karyawan->id][$item->id] = $hasilPerkalian;
+            }
+        }
+
+        // Setelah melakukan perhitungan, simpan data ke dalam database atau lakukan tindakan lainnya
+        // Contoh penyimpanan ke database:
+
 
         $semuaPenilaian = [];
         $semuaData = [];
@@ -195,25 +298,6 @@ class Penilaian extends Component
         }
 
 
-        // PEMBAGI
-        // dd($kriteria_sqrt);
-
-        // Hitung total kuadrat kriteria dan simpan dalam array asosiatif
-        // $kriteria_totals = [];
-        // foreach ($data_r as &$item) {
-        //     foreach ($item['bobot'] as $kriteria => $nilai) {
-        //         if (!isset($kriteria_totals[$kriteria])) {
-        //             $kriteria_totals[$kriteria] = 0;
-        //         }
-        //         $kriteria_totals[$kriteria] += pow($nilai['total'], 2);
-        //     }
-        // }
-
-        // foreach ($data_r as &$item) {
-        //     foreach ($item['bobot'] as $kriteria => $nilai) {
-        //         $item['bobot'][$kriteria]['total'] = $nilai['total'] / $kriteria_sqrt[$kriteria];
-        //     }
-        // }
         // dd($semuaData);
         $data_r = $semuaData;
         foreach ($data_r as &$item) {
@@ -392,7 +476,7 @@ class Penilaian extends Component
 
             $penilaian = new PenilaianDb();
             $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
-            $penilaian->karyawan = $karyawan->nama; // Masukkan ID karyawan
+            $penilaian->nama_karyawan = $karyawan->nama; // Masukkan ID karyawan
             $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
             $penilaian->data = json_encode($hasil);
             $penilaian->save();
@@ -403,6 +487,9 @@ class Penilaian extends Component
         // $this->cetakLaporan($semuaPenilaian);
         return redirect()->route('penilaian.index');
     }
+
+
+
 
 
     public function cetakLaporan($semuaPenilaian)

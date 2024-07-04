@@ -17,35 +17,48 @@
                                 <div class="form-group">
                                     <label>Nama</label>
                                     <input name="nama" type="text" class="form-control"
-                                        placeholder="Masukkan Nama Karyawan">
+                                        placeholder="Masukkan Nama Karyawan" value="{{ old('nama') }}">
+                                    @error('nama')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Divisi</label>
                                     <input name="divisi" type="text" class="form-control"
-                                        placeholder="Masukkan Divisi Karyawan">
+                                        placeholder="Masukkan Divisi Karyawan" value="{{ old('divisi') }}">
+                                    @error('divisi')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Username</label>
-                                    <input required name="username" type="text" class="form-control" placeholder="">
+                                    <input required name="username" type="text" class="form-control" placeholder=""
+                                        value="{{ old('username') }}">
+                                    @error('username')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input required name="password" type="password" class="form-control" placeholder="">
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

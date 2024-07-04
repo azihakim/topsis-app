@@ -43,26 +43,22 @@
                                     <label>{{ $item->nama_sub_kriteria }} <br> (Max 20 Hari)</label>
                                     <input required placeholder="Hari" type="number" class="form-control"
                                         wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
-                                        max="{{ $item->bobot }}"
-                                        wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
+                                        max="{{ $item->bobot }}">
                                 @elseif ($item->nama_sub_kriteria == 'Total Jam Kerja')
                                     <label>{{ $item->nama_sub_kriteria }} <br> (Max 150 Jam)</label>
                                     <input required placeholder="Jam" type="number" class="form-control"
                                         wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
-                                        max="{{ $item->bobot }}"
-                                        wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
+                                        max="{{ $item->bobot }}">
                                 @elseif ($item->nama_sub_kriteria == 'Izin Kerja')
                                     <label>{{ $item->nama_sub_kriteria }} <br> (Max 20 Hari)</label>
                                     <input required placeholder="Hari" type="number" class="form-control"
                                         wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
-                                        max="{{ $item->bobot }}"
-                                        wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
+                                        max="{{ $item->bobot }}">
                                 @else
                                     <label>{{ $item->nama_sub_kriteria }} <br> (Max {{ $item->bobot }})</label>
                                     <input type="number" class="form-control"
                                         wire:model="bobot.{{ $karyawan->id }}.{{ $item->id }}" min="0"
-                                        max="{{ $item->bobot }}"
-                                        wire:change="calculateMultiplication('{{ $karyawan->id }}', '{{ $item->id }}', '{{ $item->nama_sub_kriteria }}', {{ $item->bobot }})">
+                                        max="{{ $item->bobot }}">
                                 @endif
                                 <div>
                                     @error('bobot.' . $karyawan->id . '.' . $item->id)
