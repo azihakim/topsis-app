@@ -39,23 +39,24 @@ class KaryawanController extends Controller
             'nama' => 'required|string|max:255',
             'divisi' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8'
         ]);
 
         // Simpan data karyawan
         $karyawan = new Karyawan;
         $karyawan->nama = $request->nama;
         $karyawan->divisi = $request->divisi;
-        // $karyawan->save();
+        $karyawan->save();
 
         // Simpan data user
         $user = new User();
+        $user->karyawan_id = $karyawan->id;
         $user->name = $request->nama;
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->role = 'Karyawan';
-        // $user->save();
-        dd($karyawan, $user);
+        $user->save();
+        // dd($karyawan, $user);
         return redirect()->route('karyawan.index')
             ->with('success', 'Karyawan Berhasil diSimpan.');
     }
@@ -67,8 +68,7 @@ class KaryawanController extends Controller
     public function edit($id)
     {
         $karyawan = Karyawan::find($id);
-        $nama = $karyawan->nama;
-        $user = user::all()->where('name', $nama)->first();
+        $user = user::where('karyawan_id', $id)->first();
         // dd($user);
         return view('karyawan.editKaryawan', compact('karyawan', 'user'));
     }
@@ -83,9 +83,12 @@ class KaryawanController extends Controller
         $karyawan->divisi = $request->divisi;
         $karyawan->save();
 
-        $nama = $karyawan->nama;
 
-        $user = user::all()->where('name', $nama)->first();
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users,username',
+        ]);
+
+        $user = user::where('karyawan_id', $id)->first();
         $user->name = $request->nama;
         $user->username = $request->username;
         if ($request->password != null) {
@@ -102,7 +105,9 @@ class KaryawanController extends Controller
      */
     public function destroy($id)
     {
-        $karyawan = Karyawan::findOrFail($id);
+        $karyawan = Karyawan::find($id);
+        $user = user::where('karyawan_id', $id)->first();
+        $user->delete();
         $karyawan->delete();
 
         return redirect()->route('karyawan.index')->with('success', 'Karyawan Berhasil diHapus.');
