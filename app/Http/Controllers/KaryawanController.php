@@ -68,7 +68,8 @@ class KaryawanController extends Controller
     public function edit($id)
     {
         $karyawan = Karyawan::find($id);
-        $user = user::where('karyawan_id', $id)->first();
+        $user_id = $karyawan->id;
+        $user = user::where('karyawan_id', $user_id)->first();
         // dd($user);
         return view('karyawan.editKaryawan', compact('karyawan', 'user'));
     }
@@ -81,15 +82,21 @@ class KaryawanController extends Controller
         $karyawan = Karyawan::findOrFail($id);
         $karyawan->nama = $request->nama;
         $karyawan->divisi = $request->divisi;
+
+        $cekUsername = User::where('karyawan_id', $karyawan->id)->first();
+        if ($request->username != $cekUsername->username) {
+            $user = user::where('karyawan_id', $id)->first();
+            $request->validate([
+                'username' => 'required|string|max:255|unique:users,username',
+            ]);
+        };
         $karyawan->save();
 
 
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users,username',
-        ]);
 
         $user = user::where('karyawan_id', $id)->first();
         $user->name = $request->nama;
+        $user->karyawan_id = $karyawan->id;
         $user->username = $request->username;
         if ($request->password != null) {
             $user->password = Hash::make($request->password);

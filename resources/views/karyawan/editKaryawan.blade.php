@@ -34,12 +34,18 @@
                                     <label>Username</label>
                                     <input required name="username" type="text" class="form-control"
                                         value="{{ $user->username }}">
+                                    @error('username')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input name="password" type="password" class="form-control">
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
