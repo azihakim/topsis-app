@@ -106,11 +106,8 @@
                     </thead>
                     <tbody>
                         @foreach ($data_r as $penilaian)
-                            @php
-                                $namaKaryawan = $karyawans->where('id', $penilaian['karyawan_id'])->first()->nama;
-                            @endphp
                             <tr>
-                                <td>{{ $namaKaryawan }}</td>
+                                <td>{{ $penilaian['nama_karyawan'] }}</td>
                                 @foreach ($penilaian['bobot'] as $details)
                                     <td>{{ $details['normalized_total'] }}</td>
                                 @endforeach
@@ -118,6 +115,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
 
                 <br>
 
@@ -133,12 +131,8 @@
                     </thead>
                     <tbody>
                         @foreach ($data_y as $penilaian)
-                            @php
-                                // dd($penilaian);
-                                $namaKaryawan = $karyawans->where('id', $penilaian['karyawan_id'])->first()->nama;
-                            @endphp
                             <tr>
-                                <td>{{ $namaKaryawan }}</td>
+                                <td>{{ $penilaian['nama_karyawan'] }}</td>
                                 @foreach ($penilaian['bobot'] as $details)
                                     <td>{{ $details['normalized_total'] }}</td>
                                 @endforeach

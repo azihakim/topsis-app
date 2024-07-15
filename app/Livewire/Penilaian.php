@@ -161,7 +161,7 @@ class Penilaian extends Component
         $yData = $this->dataY();
         $apData = $this->calculateApData($yData);
         $amData = $this->calculateAmData($yData);
-        // $dpData = $this->calculateDpData($normalizedData, $apData);
+        $dpData = $this->calculateDpData($yData, $apData);
         // $dmData = $this->calculateDmData($normalizedData, $amData);
         // $finalData = $this->calculateFinalData($dpData, $dmData);
 
@@ -169,18 +169,7 @@ class Penilaian extends Component
 
         // dd('finalData', $finalData);
     }
-    public function dataY()
-    {
-        $data_y = $this->data_r;
-        foreach ($data_y as &$item) {
-            foreach ($item['bobot'] as $kriteria => &$nilai) {
-                $nilai['normalized_total'] *= $nilai['bobot_kriteria'];
-            }
-        }
-        $this->data_y = $data_y;
-        // dd('data_y', $this->data_y);
-        return $this->data_y;
-    }
+
 
     protected function calculateBobot()
     {
@@ -316,8 +305,11 @@ class Penilaian extends Component
                 ];
             }
 
+            $nama_karyawan = $this->nama_karyawan[$penilaian['karyawan_id']];
+
             $normalizedPenilaian = [
                 'karyawan_id' => $penilaian['karyawan_id'],
+                'nama_karyawan' => $nama_karyawan,
                 'tgl_penilaian' => $penilaian['tgl_penilaian'],
                 'bobot' => $normalizedBobots,
             ];
@@ -329,6 +321,19 @@ class Penilaian extends Component
         // dd('sss', $this->data_r);
         // $this->data_y = $normalizedData;
         return $this->data_r;
+    }
+
+    public function dataY()
+    {
+        $data_y = $this->data_r;
+        foreach ($data_y as &$item) {
+            foreach ($item['bobot'] as $kriteria => &$nilai) {
+                $nilai['normalized_total'] *= $nilai['bobot_kriteria'];
+            }
+        }
+        $this->data_y = $data_y;
+        // dd('data_y', $this->data_y);
+        return $this->data_y;
     }
 
     protected function calculateApData($yData)
@@ -412,14 +417,14 @@ class Penilaian extends Component
 
 
 
-    protected function calculateDpData($normalizedData, $apData)
+    protected function calculateDpData($yData, $apData)
     {
         // Mengambil semua karyawan
         foreach ($this->karyawans as $karyawan) {
             $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
         }
 
-        $data_dp = $this->data_y;
+        $data_dp = $yData;
 
         foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
             foreach ($data_dp as &$item) {
@@ -432,7 +437,7 @@ class Penilaian extends Component
         }
 
         $this->data_dp = $data_dp;
-        dd('dp', $this->data_dp);
+        // dd('dp', $this->data_dp);
         return $this->data_dp;
     }
 
