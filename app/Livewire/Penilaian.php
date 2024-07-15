@@ -34,6 +34,7 @@ class Penilaian extends Component
     public $data_r = [];
     public $data_y = [];
     public $data_ap = [];
+    // public $apData = [];
     public $data_am = [];
     public $data_dp = [];
     public $data_dm = [];
@@ -157,11 +158,12 @@ class Penilaian extends Component
         $this->calculateBobot();
         $penilaianData = $this->preparePenilaianData();
         $normalizedData = $this->normalizeData($penilaianData);
-        $apData = $this->calculateApData($normalizedData);
-        $amData = $this->calculateAmData($normalizedData);
-        $dpData = $this->calculateDpData($normalizedData, $apData);
-        $dmData = $this->calculateDmData($normalizedData, $amData);
-        $finalData = $this->calculateFinalData($dpData, $dmData);
+        $yData = $this->dataY();
+        $apData = $this->calculateApData($yData);
+        $amData = $this->calculateAmData($yData);
+        // $dpData = $this->calculateDpData($normalizedData, $apData);
+        // $dmData = $this->calculateDmData($normalizedData, $amData);
+        // $finalData = $this->calculateFinalData($dpData, $dmData);
 
         $this->dataY();
 
@@ -329,84 +331,140 @@ class Penilaian extends Component
         return $this->data_r;
     }
 
-    protected function calculateApData($normalizedData)
+    protected function calculateApData($yData)
     {
+        // Initialize an empty array to store the results
+        $data_ap = [];
 
-        foreach ($normalizedData as $kriteria => $totals) {
-            $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
+        // Iterate over each employee's data
+        foreach ($yData as $penilaian) {
+            // Iterate over each criterion for the current employee
+            foreach ($penilaian['bobot'] as $kriteria => $details) {
+                // Fetch the criterion details from the database
+                $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
 
-            if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
-                $this->data_ap[$kriteria] = max($totals);
-            } elseif ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
-                $this->data_ap[$kriteria] = min($totals);
+                // Check if the criterion is of type 'Benefit'
+                if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
+                    // If this criterion does not exist in $data_ap, initialize it
+                    if (!isset($data_ap[$kriteria])) {
+                        $data_ap[$kriteria] = $details['normalized_total'];
+                    } else {
+                        // Calculate the minimum normalized total for 'Benefit' criteria
+                        $data_ap[$kriteria] = max($data_ap[$kriteria], $details['normalized_total']);
+                    }
+                } elseif ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
+                    // If this criterion does not exist in $data_ap, initialize it
+                    if (!isset($data_ap[$kriteria])) {
+                        $data_ap[$kriteria] = $details['normalized_total'];
+                    } else {
+                        // Calculate the maximum normalized total for 'Cost' criteria
+                        $data_ap[$kriteria] = min($data_ap[$kriteria], $details['normalized_total']);
+                    }
+                }
             }
         }
 
-
+        $this->data_ap = $data_ap;
         // dd('ap', $this->data_ap);
+
+        // Return the calculated data
         return $this->data_ap;
     }
 
-    protected function calculateAmData($normalizedData)
+
+    protected function calculateAmData($yData)
     {
-        $kriteria_totals = [];
+        // Initialize an empty array to store the results
+        $data_am = [];
 
-        foreach ($normalizedData as &$item) {
-            foreach ($item['bobot'] as $kriteria => $nilai) {
-                if (!isset($kriteria_totals[$kriteria])) {
-                    $kriteria_totals[$kriteria] = [];
+        // Iterate over each employee's data
+        foreach ($yData as $penilaian) {
+            // Iterate over each criterion for the current employee
+            foreach ($penilaian['bobot'] as $kriteria => $details) {
+                // Fetch the criterion details from the database
+                $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
+
+                // Check if the criterion is of type 'Benefit'
+                if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
+                    // If this criterion does not exist in $data_am, initialize it
+                    if (!isset($data_am[$kriteria])) {
+                        $data_am[$kriteria] = $details['normalized_total'];
+                    } else {
+                        // Calculate the minimum normalized total for 'Benefit' criteria
+                        $data_am[$kriteria] = min($data_am[$kriteria], $details['normalized_total']);
+                    }
+                } elseif ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
+                    // If this criterion does not exist in $data_am, initialize it
+                    if (!isset($data_am[$kriteria])) {
+                        $data_am[$kriteria] = $details['normalized_total'];
+                    } else {
+                        // Calculate the maximum normalized total for 'Cost' criteria
+                        $data_am[$kriteria] = max($data_am[$kriteria], $details['normalized_total']);
+                    }
                 }
-                $kriteria_totals[$kriteria][] = $nilai['total'];
             }
         }
-
-        $this->data_am = [];
-        foreach ($kriteria_totals as $kriteria => $totals) {
-            $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
-
-            if ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
-                $this->data_am[$kriteria] = max($totals);
-            } elseif ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
-                $this->data_am[$kriteria] = min($totals);
-            }
-        }
-
+        // dd($data_am);
+        $this->data_am = $data_am;
+        // Return the calculated data
         return $this->data_am;
     }
 
+
+
     protected function calculateDpData($normalizedData, $apData)
     {
-        $this->data_dp = $normalizedData;
-
-        foreach ($this->data_dp as &$item) {
-            $total_kuadrat = 0;
-            foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
-                $total_kuadrat += pow($apData[$kriteria] - $detail_kriteria['total'], 2);
-            }
-            $item['total_kuadrat'] = sqrt($total_kuadrat);
+        // Mengambil semua karyawan
+        foreach ($this->karyawans as $karyawan) {
+            $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
         }
 
+        $data_dp = $this->data_y;
+
+        foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
+            foreach ($data_dp as &$item) {
+                $total_kuadrat = 0;
+                foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
+                    $total_kuadrat += pow($apData[$kriteria] - $detail_kriteria['total'], 2);
+                }
+                $item['total_kuadrat'] = sqrt($total_kuadrat);
+            }
+        }
+
+        $this->data_dp = $data_dp;
+        dd('dp', $this->data_dp);
         return $this->data_dp;
     }
 
     protected function calculateDmData($normalizedData, $amData)
     {
-        $this->data_dm = $normalizedData;
-
-        foreach ($this->data_dm as &$item) {
-            $total_kuadrat = 0;
-            foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
-                $total_kuadrat += pow($amData[$kriteria] - $detail_kriteria['total'], 2);
-            }
-            $item['total_kuadrat'] = sqrt($total_kuadrat);
+        // Mengambil semua karyawan
+        foreach ($this->karyawans as $karyawan) {
+            $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
         }
+
+        $data_dm = $this->data_y;
+
+
+        foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
+            foreach ($data_dm as &$item) {
+                $total_kuadrat = 0;
+                foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
+                    $total_kuadrat += pow($amData[$kriteria] - $detail_kriteria['total'], 2);
+                }
+                $item['total_kuadrat'] = sqrt($total_kuadrat);
+            }
+        }
+
+        $this->data_dm = $data_dm;
 
         return $this->data_dm;
     }
 
     protected function calculateFinalData($dpData, $dmData)
     {
-        $this->data_v = [];
+        // $this->data_v = [];
+        dd($dpData);
         $total_kuadrat_dp = array_column($dpData, 'total_kuadrat');
         $total_kuadrat_dm = array_column($dmData, 'total_kuadrat');
 

@@ -153,19 +153,43 @@
                 <table class="table-bordered table-striped table">
                     <thead>
                         <tr>
-                            <th>Kriteria</th>
-                            <th>Nilai</th>
+                            @foreach ($data_ap as $kriteria => $details)
+                                <th>{{ $kriteria }}</th>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($apData as $kriteria => $nilai)
-                            <tr>
-                                <td>{{ $kriteria }}</td>
-                                <td>{{ $nilai }}</td>
-                            </tr>
-                        @endforeach --}}
+                        <tr>
+                            @foreach ($data_ap as $kriteria => $normalized_total)
+                                <td>{{ $normalized_total }}</td>
+                            @endforeach
+                        </tr>
                     </tbody>
                 </table>
+
+
+                <br>
+
+                <h3>A-</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            @foreach ($data_am as $kriteria => $details)
+                                <th>{{ $kriteria }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @foreach ($data_am as $kriteria => $normalized_total)
+                                <td>{{ $normalized_total }}</td>
+                            @endforeach
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
 
 
                 <button type="submit" wire:click="simpan" class="btn btn-primary">
@@ -174,20 +198,8 @@
                 <button type="submit" wire:click="back" class="btn btn-danger">
                     Kembali
                 </button>
-                <button type="submit" wire:click="dataV" class="btn btn-danger">
-                    V
-                </button>
-                <button type="submit" wire:click="dataDP" class="btn btn-danger">
-                    DP
-                </button>
-                <button type="submit" wire:click="dataAP" class="btn btn-danger">
-                    AP
-                </button>
-                <button type="submit" wire:click="dataY" class="btn btn-danger">
-                    Y
-                </button>
-                <button type="submit" wire:click="normalizeData" class="btn btn-danger">
-                    normalizeData
+                <button type="submit" wire:click="calculateAmData" class="btn btn-danger">
+                    calculateAmData
                 </button>
             </div>
         @endif
