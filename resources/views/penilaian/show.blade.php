@@ -37,7 +37,7 @@
                             <td>{{ $data->nama_karyawan }}</td>
                             <td>{{ $item->tgl_penilaian }}</td>
                             <td>
-                                <pre>{{ $data->data_v }}</pre>
+                                <pre>{{ $data->value }}</pre>
                             </td>
                         </tr>
                     @endforeach

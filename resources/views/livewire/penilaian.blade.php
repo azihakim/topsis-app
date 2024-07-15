@@ -116,7 +116,7 @@
                     </tbody>
                 </table>
 
-
+                <hr>
                 <br>
 
                 <h3>Matriks Ternormalisasi Terbobot (Y)</h3>
@@ -141,6 +141,7 @@
                     </tbody>
                 </table>
 
+                <hr>
                 <br>
 
                 <h3>A+</h3>
@@ -162,6 +163,7 @@
                 </table>
 
 
+                <hr>
                 <br>
 
                 <h3>A-</h3>
@@ -182,12 +184,76 @@
                     </tbody>
                 </table>
 
+                <hr>
+                <br>
+
+                <h3>D+</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            <th>Nama Karyawan</th>
+                            <th>Total Kuadrat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_dp as $penilaian)
+                            <tr>
+                                <td>{{ $penilaian['nama_karyawan'] }}</td>
+                                <td>{{ $penilaian['total_kuadrat'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <hr>
+                <br>
+
+                <h3>D-</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            <th>Nama Karyawan</th>
+                            <th>Total Kuadrat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_dm as $penilaian)
+                            <tr>
+                                <td>{{ $penilaian['nama_karyawan'] }}</td>
+                                <td>{{ $penilaian['total_kuadrat'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <hr>
+                <br>
+
+                <h3>Hasil Akhir</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Nama Karyawan</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_final as $data)
+                            <tr>
+                                <td>{{ $data['rank'] }}</td>
+                                <td>{{ $data['nama_karyawan'] }}</td>
+                                <td>{{ $data['value'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
 
 
 
-                <button type="submit" wire:click="simpan" class="btn btn-primary">
-                    simpan
+                <button type="submit" wire:click="store" class="btn btn-primary">
+                    store
                 </button>
                 <button type="submit" wire:click="back" class="btn btn-danger">
                     Kembali

@@ -40,6 +40,7 @@ class Penilaian extends Component
     public $data_dm = [];
     public $data_v = [];
     public $kriteria_totals = [];
+    public $data_final = [];
 
 
 
@@ -162,8 +163,8 @@ class Penilaian extends Component
         $apData = $this->calculateApData($yData);
         $amData = $this->calculateAmData($yData);
         $dpData = $this->calculateDpData($yData, $apData);
-        // $dmData = $this->calculateDmData($normalizedData, $amData);
-        // $finalData = $this->calculateFinalData($dpData, $dmData);
+        $dmData = $this->calculateDmData($yData, $amData);
+        $finalData = $this->calculateFinalData($dpData, $dmData);
 
         $this->dataY();
 
@@ -441,7 +442,7 @@ class Penilaian extends Component
         return $this->data_dp;
     }
 
-    protected function calculateDmData($normalizedData, $amData)
+    protected function calculateDmData($yData, $amData)
     {
         // Mengambil semua karyawan
         foreach ($this->karyawans as $karyawan) {
@@ -462,34 +463,78 @@ class Penilaian extends Component
         }
 
         $this->data_dm = $data_dm;
-
+        // dd($this->data_dm);
         return $this->data_dm;
     }
 
     protected function calculateFinalData($dpData, $dmData)
     {
-        // $this->data_v = [];
-        dd($dpData);
+        // Extract total_kuadrat values for DP and DM
         $total_kuadrat_dp = array_column($dpData, 'total_kuadrat');
         $total_kuadrat_dm = array_column($dmData, 'total_kuadrat');
 
-        foreach ($this->karyawans as $index => &$karyawan) {
-            $total_dp = $total_kuadrat_dp[$index];
-            $total_dm = $total_kuadrat_dm[$index];
-            $this->data_v[] = [
-                'index' => $index,
-                'value' => ($total_dm + $total_dp != 0) ? $total_dm / ($total_dm + $total_dp) : 0
-            ];
+        // Initialize an array to store data_v values
+        $data_v = [];
+
+        // Iterate over each karyawan in the collection
+        foreach ($this->karyawans as $index => $karyawan) {
+            // Ensure the karyawan_id exists in the $total_kuadrat_dp and $total_kuadrat_dm arrays
+            if (isset($total_kuadrat_dp[$index]) && isset($total_kuadrat_dm[$index])) {
+                $total_dp = $total_kuadrat_dp[$index];
+                $total_dm = $total_kuadrat_dm[$index];
+
+                // Calculate the value of V for each karyawan
+                $value = ($total_dm + $total_dp != 0) ? $total_dm / ($total_dm + $total_dp) : 0;
+
+                // Append the result to the data_v array
+                $data_v[] = [
+                    'id_karyawan' => $karyawan->id,
+                    'nama_karyawan' => $karyawan->nama,
+                    'value' => $value
+                ];
+            }
         }
 
-        usort($this->data_v, function ($a, $b) {
+        // Sort the results by value in descending order to determine rank
+        usort($data_v, function ($a, $b) {
             return $b['value'] <=> $a['value'];
         });
 
-        return $this->data_v;
+        // Add the rank to each karyawan
+        foreach ($data_v as $rank => &$item) {
+            $item['rank'] = $rank + 1;
+        }
+        // dd($data_v);
+        $this->data_final = $data_v;
+        // Return the final data
+        return $this->data_final;
     }
 
 
+    public function store()
+    {
+        $semuaPenilaian = [];
+        foreach ($this->data_final as $hasil) {
+            // Cari ID karyawan berdasarkan nama karyawan
+            $nama_karyawan = $hasil['nama_karyawan'];
+            $karyawan = Karyawan::where('nama', $nama_karyawan)->first();
+
+            // Buat entri baru dalam PenilaianDb jika karyawan ditemukan
+
+            $penilaian = new PenilaianDb();
+            $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
+            $penilaian->nama_karyawan = $karyawan->nama; // Masukkan ID karyawan
+            $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
+            $penilaian->data = json_encode($hasil);
+            // dd($penilaian);
+            $penilaian->save();
+
+            $semuaPenilaian[] = $penilaian;
+        }
+        // $this->tgl_penilaian = $penilaian->tgl_penilaian;
+        // $this->cetakLaporan($semuaPenilaian);
+        return redirect()->route('penilaian.index');
+    }
 
 
 
@@ -511,29 +556,7 @@ class Penilaian extends Component
         $this->step = 1;
     }
 
-    public function store()
-    {
-        $semuaPenilaian = [];
-        foreach ($this->hasil_akhir as $hasil) {
-            // Cari ID karyawan berdasarkan nama karyawan
-            $nama_karyawan = $hasil['nama_karyawan'];
-            $karyawan = Karyawan::where('nama', $nama_karyawan)->first();
 
-            // Buat entri baru dalam PenilaianDb jika karyawan ditemukan
-
-            $penilaian = new PenilaianDb();
-            $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
-            $penilaian->nama_karyawan = $karyawan->nama; // Masukkan ID karyawan
-            $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
-            $penilaian->data = json_encode($hasil);
-            $penilaian->save();
-
-            $semuaPenilaian[] = $penilaian;
-        }
-        // $this->tgl_penilaian = $penilaian->tgl_penilaian;
-        // $this->cetakLaporan($semuaPenilaian);
-        return redirect()->route('penilaian.index');
-    }
 
 
 
