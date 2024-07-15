@@ -56,7 +56,9 @@ class Penilaian extends Component
 
     public function render()
     {
-        return view('livewire.penilaian');
+        return view('livewire.penilaian', [
+            'data_y' => $this->data_y,
+        ]);
     }
 
 
@@ -161,7 +163,21 @@ class Penilaian extends Component
         $dmData = $this->calculateDmData($normalizedData, $amData);
         $finalData = $this->calculateFinalData($dpData, $dmData);
 
+        $this->dataY();
+
         // dd('finalData', $finalData);
+    }
+    public function dataY()
+    {
+        $data_y = $this->data_r;
+        foreach ($data_y as &$item) {
+            foreach ($item['bobot'] as $kriteria => &$nilai) {
+                $nilai['normalized_total'] *= $nilai['bobot_kriteria'];
+            }
+        }
+        $this->data_y = $data_y;
+        // dd('data_y', $this->data_y);
+        return $this->data_y;
     }
 
     protected function calculateBobot()
@@ -309,38 +325,14 @@ class Penilaian extends Component
 
         $this->data_r = $normalizedData;
         // dd('sss', $this->data_r);
+        // $this->data_y = $normalizedData;
         return $this->data_r;
     }
 
-    public function dataY()
-    {
-        $data_y = $this->data_r;
-        foreach ($data_y as &$item) {
-            foreach ($item['bobot'] as $kriteria => &$nilai) {
-                $nilai['total'] *= $nilai['bobot_kriteria'];
-            }
-        }
-        // dd($data_y, $this->data_r);
-    }
-
-
-
-
     protected function calculateApData($normalizedData)
     {
-        $kriteria_totals = [];
 
-        foreach ($normalizedData as &$item) {
-            foreach ($item['bobot'] as $kriteria => $nilai) {
-                if (!isset($kriteria_totals[$kriteria])) {
-                    $kriteria_totals[$kriteria] = [];
-                }
-                $kriteria_totals[$kriteria][] = $nilai['total'];
-            }
-        }
-
-        $this->data_ap = [];
-        foreach ($kriteria_totals as $kriteria => $totals) {
+        foreach ($normalizedData as $kriteria => $totals) {
             $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
 
             if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
@@ -349,6 +341,8 @@ class Penilaian extends Component
                 $this->data_ap[$kriteria] = min($totals);
             }
         }
+
+
         // dd('ap', $this->data_ap);
         return $this->data_ap;
     }

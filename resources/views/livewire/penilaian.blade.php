@@ -94,6 +94,7 @@
             </div>
         @elseif($step == 2)
             <div class="card-body">
+                <h3>Matriks Ternormalisasi (R)</h3>
                 <table class="table-bordered table-striped table">
                     <thead>
                         <tr>
@@ -117,6 +118,55 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <br>
+
+                <h3>Matriks Ternormalisasi Terbobot (Y)</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            <th>Nama Karyawan</th>
+                            @foreach ($data_y[0]['bobot'] as $kriteria => $details)
+                                <th>{{ $kriteria }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_y as $penilaian)
+                            @php
+                                // dd($penilaian);
+                                $namaKaryawan = $karyawans->where('id', $penilaian['karyawan_id'])->first()->nama;
+                            @endphp
+                            <tr>
+                                <td>{{ $namaKaryawan }}</td>
+                                @foreach ($penilaian['bobot'] as $details)
+                                    <td>{{ $details['normalized_total'] }}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <br>
+
+                <h3>A+</h3>
+                <table class="table-bordered table-striped table">
+                    <thead>
+                        <tr>
+                            <th>Kriteria</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- @foreach ($apData as $kriteria => $nilai)
+                            <tr>
+                                <td>{{ $kriteria }}</td>
+                                <td>{{ $nilai }}</td>
+                            </tr>
+                        @endforeach --}}
+                    </tbody>
+                </table>
+
 
                 <button type="submit" wire:click="simpan" class="btn btn-primary">
                     simpan
