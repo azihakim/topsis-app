@@ -86,10 +86,7 @@
                     </div>
                 @endif
                 <button type="submit" wire:click="next" class="btn btn-primary">
-                    next
-                </button>
-                <button type="submit" wire:click="simpan" class="btn btn-primary">
-                    simpan
+                    Next
                 </button>
             </div>
         @elseif($step == 2)
@@ -250,16 +247,14 @@
                 </table>
 
 
+                <hr>
 
 
+                <button type="submit" wire:click="cancel" class="btn btn-danger">
+                    Batal
+                </button>
                 <button type="submit" wire:click="store" class="btn btn-primary">
-                    store
-                </button>
-                <button type="submit" wire:click="back" class="btn btn-danger">
-                    Kembali
-                </button>
-                <button type="submit" wire:click="calculateAmData" class="btn btn-danger">
-                    calculateAmData
+                    Simpan
                 </button>
             </div>
         @endif

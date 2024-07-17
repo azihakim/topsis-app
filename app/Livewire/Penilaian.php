@@ -141,20 +141,17 @@ class Penilaian extends Component
 
     public function next()
     {
-        // $this->validateForm();
-        // if (!$this->validateForm()) {
-        //     // Jika validasi gagal, kembalikan atau lakukan tindakan yang sesuai
-        //     return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
-        // }
+        $this->validateForm();
+        if (!$this->validateForm()) {
+            // Jika validasi gagal, kembalikan atau lakukan tindakan yang sesuai
+            return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
+        }
         $this->simpan();
         $this->step = 2;
     }
 
     public function simpan()
     {
-        if (!$this->validateForm()) {
-            return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
-        }
 
         $this->calculateBobot();
         $penilaianData = $this->preparePenilaianData();
@@ -581,5 +578,10 @@ class Penilaian extends Component
             },
             $filename
         );
+    }
+
+    public function cancel()
+    {
+        return redirect()->route('penilaian.create');
     }
 }
